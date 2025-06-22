@@ -25,16 +25,48 @@ document.addEventListener("DOMContentLoaded", () => {
     listElement.appendChild(listItemElement);
   }
 
-  async function getRMCharacters() {
-    const request = await fetch("https://rickandmortyapi.com/api/character");
+  // async function getRMCharacters(url) {
+  //   const request = await fetch(
+  //     url ?? "https://rickandmortyapi.com/api/character",
+  //   );
+  //   const parsedResponse = await request.json();
+  //   const nextPage = parsedResponse?.info?.next;
+  //   const characters = parsedResponse?.results;
+  //   return { characters, nextPage };
+  // }
+
+  // getRMCharacters().then(({ characters, nextPage }) => {
+  //   characters.forEach((character) => {
+  //     renderListItem(character);
+  //   });
+  //
+  //   if (Boolean(nextPage)) {
+  //     getRMCharacters(nextPage).then(({ characters, nextPage }) => {
+  //       characters.forEach((character) => renderListItem(character));
+  //
+  //       if (Boolean(nextPage)) {
+  //         // ...etc
+  //       }
+  //     });
+  //   }
+
+  async function getRMCharactersRecursively(
+    characters = [],
+    nextPageUrl = "https://rickandmortyapi.com/api/character",
+  ) {
+    if (!nextPageUrl) return characters;
+
+    const request = await fetch(nextPageUrl);
     const parsedResponse = await request.json();
+
     const nextPage = parsedResponse?.info?.next;
-    const characters = parsedResponse?.results;
-    return { characters, nextPage };
+    return getRMCharactersRecursively(
+      [...characters, ...(parsedResponse?.results || [])],
+      nextPage,
+    );
   }
 
-  getRMCharacters().then(({ characters, nextPage }) => {
-    console.log(nextPage);
+  getRMCharactersRecursively().then((characters) => {
     characters.forEach((character) => {
       renderListItem(character);
     });
