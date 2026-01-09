@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return { pokemons, nextPage };
   }
 
-  /* ============== Función principal para aprender recursividad ================== */
+  /* ============== Función principal para mostrar los resultados ================== */
   getPokemons().then(({ pokemons, nextPage }) => {
     console.log(nextPage);
     pokemons.forEach((pokemon) => {
