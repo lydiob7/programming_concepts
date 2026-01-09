@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ================ Funcion para mostrar los resultados en el DOM ======== */
+  /* ================ Función para mostrar los resultados en el DOM ======== */
   function renderListItem(character) {
     if (!character) return;
 
@@ -13,11 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const listItemElement = document.createElement("li");
 
-    const characterImageElement = document.createElement("img");
-    characterImageElement.setAttribute("src", character.image);
-    characterImageElement.setAttribute("alt", character.name);
-    listItemElement.appendChild(characterImageElement);
-
     const characterNameElement = document.createElement("h2");
     characterNameElement.innerText = character.name || "";
     listItemElement.appendChild(characterNameElement);
@@ -25,18 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
     listElement.appendChild(listItemElement);
   }
 
-  async function getRMCharacters() {
-    const request = await fetch("https://rickandmortyapi.com/api/character");
+  /* ================ Función para hacer la petición a la api y devolver los resultados y la próxima página ============= */
+  async function getPokemons() {
+    const request = await fetch("https://pokeapi.co/api/v2/pokemon");
     const parsedResponse = await request.json();
-    const nextPage = parsedResponse?.info?.next;
-    const characters = parsedResponse?.results;
-    return { characters, nextPage };
+    const nextPage = parsedResponse?.next;
+    const pokemons = parsedResponse?.results;
+    return { pokemons, nextPage };
   }
 
-  getRMCharacters().then(({ characters, nextPage }) => {
+  /* ============== Función principal para aprender recursividad ================== */
+  getPokemons().then(({ pokemons, nextPage }) => {
     console.log(nextPage);
-    characters.forEach((character) => {
-      renderListItem(character);
+    pokemons.forEach((pokemon) => {
+      renderListItem(pokemon);
     });
   });
 });
