@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ================ Funcion para mostrar los resultados en el DOM ======== */
+  /* ================ Función para mostrar los resultados en el DOM ======== */
   function renderListItem(character) {
     if (!character) return;
 
@@ -13,11 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const listItemElement = document.createElement("li");
 
-    const characterImageElement = document.createElement("img");
-    characterImageElement.setAttribute("src", character.image);
-    characterImageElement.setAttribute("alt", character.name);
-    listItemElement.appendChild(characterImageElement);
-
     const characterNameElement = document.createElement("h2");
     characterNameElement.innerText = character.name || "";
     listItemElement.appendChild(characterNameElement);
@@ -25,50 +20,52 @@ document.addEventListener("DOMContentLoaded", () => {
     listElement.appendChild(listItemElement);
   }
 
-  // async function getRMCharacters(url) {
-  //   const request = await fetch(
-  //     url ?? "https://rickandmortyapi.com/api/character",
-  //   );
+  /* ================ Función para hacer la petición a la api y devolver los resultados y la próxima página ============= */
+  // async function getPokemons() {
+  //   const request = await fetch("https://pokeapi.co/api/v2/pokemon");
   //   const parsedResponse = await request.json();
-  //   const nextPage = parsedResponse?.info?.next;
-  //   const characters = parsedResponse?.results;
-  //   return { characters, nextPage };
+  //   const nextPage = parsedResponse?.next;
+  //   const pokemons = parsedResponse?.results;
+  //   return { pokemons, nextPage };
   // }
 
-  // getRMCharacters().then(({ characters, nextPage }) => {
-  //   characters.forEach((character) => {
-  //     renderListItem(character);
+  /* ============== Función principal para mostrar los resultados ================== */
+  // getPokemons().then(({ pokemons, nextPage }) => {
+  //   pokemons.forEach((pokemon) => {
+  //     renderListItem(pokemon);
   //   });
   //
   //   if (Boolean(nextPage)) {
-  //     getRMCharacters(nextPage).then(({ characters, nextPage }) => {
-  //       characters.forEach((character) => renderListItem(character));
+  //     getPokemons(nextPage).then(({ pokemons, nextPage }) => {
+  //       pokemons.forEach((pokemon) => renderListItem(pokemon));
   //
   //       if (Boolean(nextPage)) {
   //         // ...etc
   //       }
   //     });
   //   }
+  // });
 
-  async function getRMCharactersRecursively(
-    characters = [],
-    nextPageUrl = "https://rickandmortyapi.com/api/character",
+  /* ================ Función para hacer la petición a la api de forma recursiva ============= */
+  let calls = 0;
+  async function getPokemonsRecursively(
+    pokemons = [],
+    nextPageUrl = "https://pokeapi.co/api/v2/pokemon",
   ) {
-    if (!nextPageUrl) return characters;
+    if (!nextPageUrl || calls >= 10) return pokemons;
 
     const request = await fetch(nextPageUrl);
+    calls++;
     const parsedResponse = await request.json();
 
-    const nextPage = parsedResponse?.info?.next;
-    return getRMCharactersRecursively(
-      [...characters, ...(parsedResponse?.results || [])],
+    const nextPage = parsedResponse?.next;
+    return getPokemonsRecursively(
+      [...pokemons, ...(parsedResponse?.results || [])],
       nextPage,
     );
   }
 
-  getRMCharactersRecursively().then((characters) => {
-    characters.forEach((character) => {
-      renderListItem(character);
-    });
+  getPokemonsRecursively().then((pokemons) => {
+    pokemons.forEach((pokemon) => renderListItem(pokemon));
   });
 });
