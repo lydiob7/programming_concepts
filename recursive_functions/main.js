@@ -47,22 +47,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
 
   /* ================ Función para hacer la petición a la api de forma recursiva ============= */
+
   let calls = 0;
   async function getPokemonsRecursively(
     pokemons = [],
     nextPageUrl = "https://pokeapi.co/api/v2/pokemon",
   ) {
     if (!nextPageUrl || calls >= 10) return pokemons;
-
-    const request = await fetch(nextPageUrl);
     calls++;
+    const request = await fetch(nextPageUrl);
     const parsedResponse = await request.json();
-
     const nextPage = parsedResponse?.next;
-    return getPokemonsRecursively(
-      [...pokemons, ...(parsedResponse?.results || [])],
-      nextPage,
-    );
+    const results = parsedResponse?.results || [];
+    return getPokemonsRecursively([...pokemons, ...results], nextPage);
   }
 
   getPokemonsRecursively().then((pokemons) => {
