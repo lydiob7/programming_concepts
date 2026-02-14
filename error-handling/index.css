@@ -1,0 +1,21 @@
+html {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.root {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.root h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  text-transform: capitalize;
+}
